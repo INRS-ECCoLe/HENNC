@@ -1,4 +1,38 @@
 
+def create_h_file(filename, inp_ns: int, hid_ns: int, out_ns: int):
+
+	h_code = f"""
+#pragma once
+
+#include <iostream>
+#include <fstream>
+#include <cstring>
+#include <sstream>
+#include <hls_stream.h>
+#include <hls_math.h>
+
+using namespace std;
+
+typedef float data_t;
+
+typedef hls::stream <data_t> stream;
+
+const int inp_n = {inp_ns};
+const int hid_n = {hid_ns};
+const int out_n = {out_ns};
+
+
+void ChaoticOscillator(stream &X, stream &W1, stream &W2, stream &B1, stream &B2, data_t Y[out_n]);
+
+void mlp_core(data_t mlp_in[inp_n], data_t w1_in[inp_n][hid_n], data_t w2_in[hid_n][out_n], data_t b1_in[hid_n], data_t b2_in[out_n], data_t mlp_out[out_n]);
+
+data_t ReLU (data_t inp_relu);
+
+"""
+	with open(filename, "w") as file:
+		
+		file.write(h_code)
+
 
 def create_cpp_file(filename, inp_sample: int, out_n: int, one_mac: bool, no_dsp: bool):
     
@@ -202,10 +236,127 @@ data_t ReLU (data_t inp_relu)
 """
 
 	with open(filename, "w") as file:
+
 		file.write(cpp_code)
+
+
+def create_testBench_file(filename, x_0: float, y_0: float, z_0: float):
+
+	tb_code = f"""
+#include "HENNC.h"
+
+
+
+int main ()
+{{
+
+	data_t t_i [inp_n] = {{{x_0}, {y_0}, {z_0}}};
+
+	data_t t_w1[inp_n][hid_n] = {{}};
+
+	data_t t_b1[hid_n] = {{}};
+
+	data_t t_w2[hid_n][out_n] = {{}};
+
+	data_t t_b2[out_n] = {{}};
+
+	data_t t_n[out_n] = {{}};
+
+	stream i_t;
+	stream w1_t;
+	stream w2_t;
+	stream b1_t;
+	stream b2_t;
+
+
+	for (int i = 0; i < inp_n; i++)
+	{{
+		i_t.write(t_i[i]);
+	}}
+
+
+    ifstream fin1;
+    stringstream ss1;
+    ss1 << "w_1.txt";
+    fin1.open(ss1.str().c_str());
+    for (int i = 0; i < inp_n; i++)
+    {{
+        for (int j = 0; j < hid_n; j++)
+        {{
+            fin1 >> t_w1[i][j];
+            w1_t.write(t_w1[i][j]);
+		}}
+	}}
+
+    ifstream fin2;
+    stringstream ss2;
+    ss2 << "b_1.txt";
+    fin2.open(ss2.str().c_str());
+    for (int i = 0; i < hid_n; i++)
+    {{
+        fin2 >> t_b1[i];
+        b1_t.write(t_b1[i]);
+
+	}}
+
+    ifstream fin3;
+    stringstream ss3;
+    ss3 << "w_2.txt";
+    fin3.open(ss3.str().c_str());
+    for (int i = 0; i < hid_n; i++)
+    {{
+        for (int j = 0; j < out_n; j++)
+        {{
+            fin3 >> t_w2[i][j];
+            w2_t.write(t_w2[i][j]);
+		}}
+	}}
+
+    ifstream fin4;
+    stringstream ss4;
+    ss4 << "b_2.txt";
+    fin4.open(ss4.str().c_str());
+    for (int i = 0; i < out_n; i++)
+    {{
+        fin4 >> t_b2[i];
+        b2_t.write(t_b2[i]);
+	}}
+
+    if (!fin1 | !fin2 | !fin3 | !fin4) {{
+        cout << "Open txt error in reading bias and weights";
+        return -1;
+	}}
+
+
+    fin1.close();
+    fin2.close();
+    fin3.close();
+    fin4.close();
+
+
+    ChaoticOscillator(i_t, w1_t, w2_t, b1_t, b2_t, t_n);
+
+    
+	return 0;
+}}
+
+
+"""
+	with open(filename, "w") as file:
+		
+		file.write(tb_code)
+
 
 if __name__ == "__main__":
 
-    cpp_filename = "Hardware Phase\HENNC.cpp"
-    create_cpp_file(cpp_filename, 100, 3, 0, 0)
-    print(f"{cpp_filename} has been created.")
+	h_filename = "Hardware Phase\HENNC.h"
+	cpp_filename = "Hardware Phase\HENNC.cpp"
+	tb_filename = "Hardware Phase\ test_bench.cpp"
+
+	create_h_file(h_filename, 3, 8, 3)
+	create_cpp_file(cpp_filename, 100, 3, 0, 0)
+	create_testBench_file(tb_filename, 0.534522473812, 0.267261236906, 0.80178374052)
+
+	print(f"{h_filename} has been created.")
+	print(f"{cpp_filename} has been created.")
+	print(f"{tb_filename} has been created.")
