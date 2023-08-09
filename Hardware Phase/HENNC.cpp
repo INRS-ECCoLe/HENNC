@@ -96,14 +96,14 @@ void mlp_core(data_t mlp_in[inp_n], data_t w1_in[inp_n][hid_n], data_t w2_in[hid
 
 {
 
-#pragma HLS ALLOCATION operation instances=fmul limit=1
-#pragma HLS ALLOCATION operation instances=fadd limit=1
+
+
 
 	data_t acc_1, acc_2 = 0;
-#pragma HLS BIND_OP variable=acc_1 op=fadd impl=fabric
-#pragma HLS BIND_OP variable=acc_1 op=fmul impl=fabric
-#pragma HLS BIND_OP variable=acc_2 op=fadd impl=fabric
-#pragma HLS BIND_OP variable=acc_2 op=fmul impl=fabric
+
+
+
+
 
 	static data_t hidden_n [hid_n] = {};
 #pragma HLS ARRAY_RESHAPE dim=1 type=complete variable=hidden_n
