@@ -34,15 +34,12 @@ data_t ReLU (data_t inp_relu);
 		file.write(h_code)
 
 
-def create_cpp_file(filename, inp_sample: int, out_n: int, one_mac: bool, no_dsp: bool):
+def create_cpp_file(filename, inp_sample: int, factor_1: int, factor_2: int, factor_3: int, factor_4: int, out_n: int, one_mac: bool, no_dsp: bool):
     
 	output_reg = ""
 	feedback = ""
 
-	factor_1 = 8
-	factor_2 = 3
-	factor_3 = 3
-	factor_4 = 8
+	
 
 	if (one_mac == True):
 
@@ -345,18 +342,3 @@ int main ()
 	with open(filename, "w") as file:
 		
 		file.write(tb_code)
-
-
-if __name__ == "__main__":
-
-	h_filename = "Hardware Phase\HENNC.h"
-	cpp_filename = "Hardware Phase\HENNC.cpp"
-	tb_filename = "Hardware Phase\ test_bench.cpp"
-
-	create_h_file(h_filename, 3, 8, 3)
-	create_cpp_file(cpp_filename, 100, 3, 0, 0)
-	create_testBench_file(tb_filename, 0.534522473812, 0.267261236906, 0.80178374052)
-
-	print(f"{h_filename} has been created.")
-	print(f"{cpp_filename} has been created.")
-	print(f"{tb_filename} has been created.")

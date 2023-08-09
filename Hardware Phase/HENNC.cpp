@@ -96,14 +96,14 @@ void mlp_core(data_t mlp_in[inp_n], data_t w1_in[inp_n][hid_n], data_t w2_in[hid
 
 {
 
-
-
+#pragma HLS ALLOCATION operation instances=fmul limit=1
+#pragma HLS ALLOCATION operation instances=fadd limit=1
 
 	data_t acc_1, acc_2 = 0;
-
-
-
-
+#pragma HLS BIND_OP variable=acc_1 op=fadd impl=fabric
+#pragma HLS BIND_OP variable=acc_1 op=fmul impl=fabric
+#pragma HLS BIND_OP variable=acc_2 op=fadd impl=fabric
+#pragma HLS BIND_OP variable=acc_2 op=fmul impl=fabric
 
 	static data_t hidden_n [hid_n] = {};
 #pragma HLS ARRAY_RESHAPE dim=1 type=complete variable=hidden_n
@@ -112,14 +112,14 @@ void mlp_core(data_t mlp_in[inp_n], data_t w1_in[inp_n][hid_n], data_t w2_in[hid
 
 	for (int i = 0; i < hid_n; i++)
 	{
-#pragma HLS UNROLL factor= 8
+#pragma HLS UNROLL factor= 1
 
 
 		acc_1 = 0;
 
 		for (int j = 0; j < inp_n; j++)
 		{
-#pragma HLS UNROLL factor= 3
+#pragma HLS UNROLL factor= 1
 
 			acc_1 += mlp_in[j] * w1_in[j][i];
 		}
@@ -130,7 +130,7 @@ void mlp_core(data_t mlp_in[inp_n], data_t w1_in[inp_n][hid_n], data_t w2_in[hid
 
 	for (int i = 0; i < out_n; i++)
 	{
-#pragma HLS UNROLL factor= 3
+#pragma HLS UNROLL factor= 1
 
 
 
@@ -138,7 +138,7 @@ void mlp_core(data_t mlp_in[inp_n], data_t w1_in[inp_n][hid_n], data_t w2_in[hid
 
 		for (int j = 0; j < hid_n; j++)
 		{
-#pragma HLS UNROLL factor= 8
+#pragma HLS UNROLL factor= 1
 
 			acc_2 += hidden_n[j] * w2_in[j][i];
 		}
