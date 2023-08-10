@@ -71,8 +71,8 @@ def create_cpp_file(filename, inp_sample: int, factor_1: int, factor_2: int, fac
 
 	for i in range (out_n):
     
-		output_reg = output_reg + f"Y[{i}] = y_reg[{i}] \n\t\t"
-		feedback = feedback + f"x_reg[{i}] = y_reg[{i}] \n\t\t"
+		output_reg = output_reg + f"Y[{i}] = y_reg[{i}]; \n\t\t"
+		feedback = feedback + f"x_reg[{i}] = y_reg[{i}]; \n\t\t"
 	
 	cpp_code = f"""
 #include "HENNC.h"

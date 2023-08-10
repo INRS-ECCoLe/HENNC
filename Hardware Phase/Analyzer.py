@@ -1,10 +1,11 @@
 
 from HLS_Generator import *
 
-def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, one_mac: bool, no_dsp: bool,  mode: str):
+def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode: str):
 
-    n_factor = 4
     factor_1 = factor_2 = factor_3 = factor_4 = 1
+    one_mac = False
+    no_dsp = False
     factor_1_list = list()
     factor_2_list = [inp_ns]
     
@@ -36,12 +37,14 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, one_mac: bool, no_dsp: b
 
             print(f"Solution {i} -> Estimated Area:        Estimated Latency:       \n")
 
-        key = int(input("Which solution you prefer ? \n"))
+        key = int(input("Which solution do you prefer? ? \n\n"))
+        no_dsp = bool(input("\nDSP Utilization --> 1: Don't use DSPss , Press Enter: Use DSPs\n\n"))
 
         factor_1 = solutions[key][0]
         factor_2 = solutions[key][1]
         factor_3 = solutions[key][2]
         factor_4 = solutions[key][3]
+
 
     elif mode == 'analyze':
         print(f"There are {len(solutions)} solutions available:\n")
@@ -60,6 +63,7 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, one_mac: bool, no_dsp: b
         factor_2 = 1
         factor_3 = 1
         factor_4 = 1
+        one_mac = True
     else:
         print("Error: wrong mode argument in Top function")
     

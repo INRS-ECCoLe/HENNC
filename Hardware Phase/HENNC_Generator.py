@@ -1,6 +1,14 @@
 import argparse
+import csv
 from Analyzer import *
 parser = argparse.ArgumentParser()
+
+
+
+
+#with open('config_file.csv') as csv_file:
+
+    #csv_reader = csv.reader(csv_file, delimiter=',')
 
 inp_ns = 3
 hid_ns = 8
@@ -35,4 +43,4 @@ elif args.interactive == True:
     mode = 'interactive'
 elif args.analyze == True:
     mode = 'analyze'
-TOP(inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, 0, 0, mode)
+TOP(inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode)
