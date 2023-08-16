@@ -1,5 +1,5 @@
-
 from HLS_Generator import *
+from Estimator import *
 
 def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode: str):
 
@@ -8,8 +8,11 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode: str):
     no_dsp = False
     factor_1_list = list()
     factor_2_list = [inp_ns]
+    estimated_luts = []
+    estimated_dsps = []
+    estimated_throughput = []
     
-    solutions = [[1,1,1,1]]
+    solutions = []
 
     if (mode == 'interactive' or mode == 'analyze'):
 
@@ -24,10 +27,11 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode: str):
             for j in factor_2_list:
 
                 solutions.append([i, j, j, i])
-
+                
+        solutions.append([1, 1, 1, 1])
         print(solutions)
 
-        # Estimate Function
+        
 
     if mode == 'interactive':
 
@@ -37,7 +41,7 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode: str):
 
             print(f"Solution {i} -> Estimated Area:        Estimated Latency:       \n")
 
-        key = int(input("Which solution do you prefer? ? \n\n"))
+        key = int(input("Which solution do you prefer? \n\n"))
         no_dsp = bool(input("\nDSP Utilization --> 1: Don't use DSPss , Press Enter: Use DSPs\n\n"))
 
         factor_1 = solutions[key][0]
@@ -48,8 +52,11 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode: str):
 
     elif mode == 'analyze':
         print(f"There are {len(solutions)} solutions available:\n")
+        estimated_luts, estimated_dsps, estimated_throughput = estimate(inp_ns, hid_ns, solutions)
         for i in range(len(solutions)):
-            print(f"Solution {i} -> Estimated Area:        Estimated Latency:       \n")
+            print(f"Solution {i} -> Estimated LUT:{estimated_luts[i]}        Estimated DSP: {estimated_dsps[i]}        Estimated Throughput: {estimated_throughput[i]}       \n")
+        
+        
         print("drawing the plot")
         # Draw the plot
     elif mode == 'generate_p': # Generate with performance as the high priority
