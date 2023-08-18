@@ -8,11 +8,14 @@ def estimate (inp_ns, hid_ns, solutions):
     pu3_coeff = {"c_1": 841, "c_2": 3824, "c_3": 2168, "B": -2935}
     rolled_coeff = {"c_1": 192, "c_2": 1257, "c_3": 1109, "B": 12405}
     
-    estimated_lut = [0] * len(solutions)
+    estimated_lut = ['NE'] * len(solutions)
     estimated_dsp = [0] * len(solutions)
     estimated_throughput = [0] * len(solutions)
     
     fu_cost = E_cost(inp_ns, hid_ns, fu_coeff["c_1"], fu_coeff["c_2"], fu_coeff["c_3"], fu_coeff["B"])
+    pu1_cost = E_cost(inp_ns, hid_ns, pu1_coeff["c_1"], pu1_coeff["c_2"], pu1_coeff["c_3"], pu1_coeff["B"])
+    pu2_cost = E_cost(inp_ns, hid_ns, pu2_coeff["c_1"], pu2_coeff["c_2"], pu2_coeff["c_3"], pu2_coeff["B"])
+    pu3_cost = E_cost(inp_ns, hid_ns, pu3_coeff["c_1"], pu3_coeff["c_2"], pu3_coeff["c_3"], pu3_coeff["B"])
     rolled_cost = E_cost(inp_ns, hid_ns, rolled_coeff["c_1"], rolled_coeff["c_2"], rolled_coeff["c_3"], rolled_coeff["B"])
     
     if (len(solutions) < 3):
@@ -24,21 +27,23 @@ def estimate (inp_ns, hid_ns, solutions):
         
         if (len(solutions)) == 3:
             
-            pu1_cost = E_cost(inp_ns, hid_ns, pu1_coeff["c_1"], pu1_coeff["c_2"], pu1_coeff["c_3"], pu1_coeff["B"])
             estimated_lut = [fu_cost] + [pu1_cost] + [rolled_cost]
             
         elif (len(solutions)) == 4:
             
-            pu1_cost = E_cost(inp_ns, hid_ns, pu1_coeff["c_1"], pu1_coeff["c_2"], pu1_coeff["c_3"], pu1_coeff["B"])
-            pu2_cost = E_cost(inp_ns, hid_ns, pu2_coeff["c_1"], pu2_coeff["c_2"], pu2_coeff["c_3"], pu2_coeff["B"])
             estimated_lut = [fu_cost] + [pu1_cost] + [pu2_cost] + [rolled_cost]
             
         elif (len(solutions)) == 5:
             
-            pu1_cost = E_cost(inp_ns, hid_ns, pu1_coeff["c_1"], pu1_coeff["c_2"], pu1_coeff["c_3"], pu1_coeff["B"])
-            pu2_cost = E_cost(inp_ns, hid_ns, pu2_coeff["c_1"], pu2_coeff["c_2"], pu2_coeff["c_3"], pu2_coeff["B"])
-            pu3_cost = E_cost(inp_ns, hid_ns, pu3_coeff["c_1"], pu3_coeff["c_2"], pu3_coeff["c_3"], pu3_coeff["B"])
             estimated_lut = [fu_cost] + [pu1_cost] + [pu2_cost] + [pu3_cost] + [rolled_cost]
+
+        elif (len(solutions)) > 5:
+
+            
+            estimated_lut[0:4] = [fu_cost] + [pu1_cost] + [pu2_cost] + [pu3_cost]
+            estimated_lut[len(estimated_lut) - 1] = rolled_cost
+            
+
             
             
             
