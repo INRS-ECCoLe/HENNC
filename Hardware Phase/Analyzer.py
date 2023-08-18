@@ -1,5 +1,6 @@
 from HLS_Generator import *
 from Estimator import *
+import numpy as np
 
 def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode: str):
 
@@ -16,9 +17,8 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode: str):
 
     if (mode == 'interactive' or mode == 'analyze'):
 
-        for idx_1 in reversed(range(2, hid_ns + 1)):
-
-            if(hid_ns % idx_1 == 0):
+        for idx_1 in reversed(range(2, hid_ns+1)):
+            if(hid_ns % idx_1 == 0 and np.log2(hid_ns/idx_1)%1 == 0):
 
                 factor_1_list.append((idx_1)) 
 

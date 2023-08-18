@@ -10,9 +10,9 @@ parser = argparse.ArgumentParser()
 
     #csv_reader = csv.reader(csv_file, delimiter=',')
 
-inp_ns = 3
+inp_ns = 5
 hid_ns = 8
-out_ns = 3
+out_ns = 5
 sample = 100
 x_0 = 0.534522473812
 y_0 = 0.267261236906
