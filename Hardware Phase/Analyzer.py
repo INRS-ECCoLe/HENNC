@@ -2,11 +2,10 @@ from HLS_Generator import *
 from Estimator import *
 import numpy as np
 
-def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode: str):
+def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, no_dsp, mode: str):
 
     factor_1 = factor_2 = factor_3 = factor_4 = 1
     one_mac = False
-    no_dsp = False
     factor_1_list = list()
     factor_2_list = [inp_ns]
     estimated_luts = []
@@ -29,6 +28,7 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode: str):
                 solutions.append([i, j, j, i])
                 
         solutions.append([1, 1, 1, 1])
+        estimated_luts, estimated_dsps, estimated_throughput = estimate(inp_ns, hid_ns, no_dsp, solutions)
         print(solutions)
 
         
@@ -39,10 +39,9 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode: str):
 
         for i in range(len(solutions)):
 
-            print(f"Solution {i} -> Estimated Area:        Estimated Latency:       \n")
+            print(f"Solution {i} -> Estimated LUT:{estimated_luts[i]}        Estimated DSP: {estimated_dsps[i]}        Estimated Throughput: {estimated_throughput[i]}       \n")
 
         key = int(input("Which solution do you prefer? \n\n"))
-        no_dsp = bool(input("\nDSP Utilization --> 1: Don't use DSPss , Press Enter: Use DSPs\n\n"))
 
         factor_1 = solutions[key][0]
         factor_2 = solutions[key][1]
@@ -52,7 +51,7 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, mode: str):
 
     elif mode == 'analyze':
         print(f"There are {len(solutions)} solutions available:\n")
-        estimated_luts, estimated_dsps, estimated_throughput = estimate(inp_ns, hid_ns, solutions)
+        
         for i in range(len(solutions)):
             print(f"Solution {i} -> Estimated LUT:{estimated_luts[i]}        Estimated DSP: {estimated_dsps[i]}        Estimated Throughput: {estimated_throughput[i]}       \n")
         
