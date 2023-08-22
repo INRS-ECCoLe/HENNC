@@ -122,6 +122,7 @@ def E_cost(x, y, c_1, c_2, c_3, B):
 
 def E_cost_nodsp(mul, add):
 
-    res = (mul * 572) + (add * 347)
+    res_1 = (mul * 73) + (add * 192)
+    res = ((mul * 572) + (add * 347)) - (res_1)
 
     return res
