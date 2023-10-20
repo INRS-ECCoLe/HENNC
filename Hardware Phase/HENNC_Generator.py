@@ -11,13 +11,13 @@ parser = argparse.ArgumentParser()
     #csv_reader = csv.reader(csv_file, delimiter=',')
 
 inp_ns = 3
-hid_ns = 16
+hid_ns = 8
 out_ns = 3
 sample = 100
 x_0 = 0.534522473812
 y_0 = 0.267261236906
 z_0 = 0.80178374052
-no_dsp = True
+no_dsp = False
 
 #-db DATABSE -u USERNAME -p PASSWORD -size 20
 parser.add_argument("-g", "--generate", help="Generate HENNC HLS model", action='store_true')

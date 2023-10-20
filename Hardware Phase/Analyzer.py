@@ -1,5 +1,6 @@
 from HLS_Generator import *
 from Estimator import *
+import matplotlib.pyplot as plt
 import numpy as np
 
 def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, no_dsp, mode: str):
@@ -10,7 +11,7 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, no_dsp, mode: str):
     factor_2_list = [inp_ns]
     estimated_luts = []
     estimated_dsps = []
-    estimated_throughput = []
+    estimated_latency = []
     
     solutions = []
 
@@ -28,7 +29,7 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, no_dsp, mode: str):
                 solutions.append([i, j, j, i])
                 
         solutions.append([1, 1, 1, 1])
-        estimated_luts, estimated_dsps, estimated_throughput = estimate(inp_ns, hid_ns, no_dsp, solutions)
+        estimated_luts, estimated_dsps, estimated_latency = estimate(inp_ns, hid_ns, no_dsp, solutions)
         print(solutions)
 
         
@@ -39,7 +40,7 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, no_dsp, mode: str):
 
         for i in range(len(solutions)):
 
-            print(f"Solution {i} -> Estimated LUT:{estimated_luts[i]}        Estimated DSP: {estimated_dsps[i]}        Estimated Throughput: {estimated_throughput[i]}       \n")
+            print(f"Solution {i} -> Estimated LUT: {estimated_luts[i]}        Estimated DSP: {estimated_dsps[i]}        Estimated Iteration Latency (CC): {estimated_latency[i]}       \n")
 
         key = int(input("Which solution do you prefer? \n\n"))
 
@@ -53,11 +54,22 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, no_dsp, mode: str):
         print(f"There are {len(solutions)} solutions available:\n")
         
         for i in range(len(solutions)):
-            print(f"Solution {i} -> Estimated LUT:{estimated_luts[i]}        Estimated DSP: {estimated_dsps[i]}        Estimated Throughput: {estimated_throughput[i]}       \n")
+            print(f"Solution {i} -> Estimated LUT: {estimated_luts[i]}        Estimated DSP: {estimated_dsps[i]}        Estimated Iteration Latency (CC): {estimated_latency[i]}       \n")
         
         
-        print("drawing the plot")
+        print("Drawing the plot")
         # Draw the plot
+
+        plt.plot(estimated_latency, estimated_luts, linestyle = '--', marker='o', lw=2.5, mew=4)
+
+        plt.xlabel("Estimated Iteration Ltanecy (CC)")
+        plt.ylabel("Estimated # of LUTs")
+        plt.ticklabel_format(axis='both', style='sci', scilimits=(3,3), useMathText=True)
+        plt.rcParams["font.family"] = "serif"
+        plt.grid()
+        
+        plt.show()
+
     elif mode == 'generate_p': # Generate with performance as the high priority
         factor_1 = hid_ns
         factor_2 = inp_ns

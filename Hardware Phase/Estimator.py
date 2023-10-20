@@ -1,19 +1,18 @@
 
 def estimate (inp_ns, hid_ns, no_dsp, solutions):
     
-    fu_coeff = {"c_1": 369, "c_2": 666, "c_3": 698, "B": 8704}
-    pu1_coeff = {"c_1": 4176, "c_2": -9169, "c_3": 6780, "B": -26471}
-    #pu1_coeff = {"c_1": 5700, "c_2": -1611, "c_3": -1800, "B": -17417}
-    pu2_coeff = {"c_1": 2179, "c_2": -4171, "c_3": 3625, "B": -9347}
-    pu3_coeff = {"c_1": 841, "c_2": 3824, "c_3": 2168, "B": -2935}
-    rolled_coeff = {"c_1": 192, "c_2": 1257, "c_3": 1109, "B": 12405}
+    fu_coeff = {"c_1": 422, "c_2": -1347, "c_3": -294, "B": 4253}
+    pu1_coeff = {"c_1": 299, "c_2": -549, "c_3": -33, "B": 479}
+    pu2_coeff = {"c_1": 399, "c_2": -1931, "c_3": -529, "B": 5629}
+    pu3_coeff = {"c_1": 414, "c_2": -3414, "c_3": -778, "B": 12659}
+    rolled_coeff = {"c_1": 336, "c_2": -1480, "c_3": -545, "B": 4803}
     
     n_mult = []
     n_add = []
     factor_split = []
     estimated_lut = ['NE'] * len(solutions)
     estimated_dsp = []
-    estimated_throughput = ['NE'] * len(solutions)
+    estimated_latency = []
     
     fu_cost = E_cost(inp_ns, hid_ns, fu_coeff["c_1"], fu_coeff["c_2"], fu_coeff["c_3"], fu_coeff["B"])
     pu1_cost = E_cost(inp_ns, hid_ns, pu1_coeff["c_1"], pu1_coeff["c_2"], pu1_coeff["c_3"], pu1_coeff["B"])
@@ -31,13 +30,14 @@ def estimate (inp_ns, hid_ns, no_dsp, solutions):
 
     if (no_dsp == False):
 
-        # Estimate DSP
+        # Estimate DSP and Latency
 
         for i in range(len(solutions)):
 
             estimated_dsp.append((n_mult[i] * 3) + (n_add[i] * 2))
+            tmp = latency((len(solutions) - i) - 1, inp_ns, hid_ns)
+            estimated_latency.append('NE' if tmp < 0 else int(tmp))
 
-        
        # Estimate LUT
        
         if (len(solutions) < 3):
@@ -68,6 +68,11 @@ def estimate (inp_ns, hid_ns, no_dsp, solutions):
     else:
 
         estimated_dsp = [0] * len(solutions)
+
+        for i in range(len(solutions)):
+
+            tmp = latency_no_dsp((len(solutions) - i) - 1, inp_ns, hid_ns)
+            estimated_latency.append('NE' if tmp < 0 else int(tmp))
 
        
         if (len(solutions)) == 3:
@@ -109,7 +114,7 @@ def estimate (inp_ns, hid_ns, no_dsp, solutions):
             estimated_lut[len(estimated_lut) - 1] = rolled_cost
 
 
-    return (estimated_lut, estimated_dsp, estimated_throughput)   
+    return (estimated_lut, estimated_dsp, estimated_latency)   
 
 
         
@@ -126,3 +131,16 @@ def E_cost_nodsp(mul, add):
     res = ((mul * 572) + (add * 347)) - (res_1)
 
     return res
+
+
+def latency (P, x, y):
+
+    lat_dsp = ((-0.6 * P**3) + (6.32 * P**2) + (-25.86 * P) + (45.38)) * (x * y)
+
+    return lat_dsp
+
+def latency_no_dsp (P, x, y):
+
+    lat_no_dsp = ((-0.6 * P**3) + (6.9 * P**2) + (-26.92 * P) + (41.74)) * (x * y)
+
+    return lat_no_dsp
