@@ -1,0 +1,18 @@
+---
+
+# Input nodes
+inp_ns: 3
+# Hidden nodes
+hid_ns: 8
+# Output nodes
+out_ns: 3
+# Number of samples
+sample: 100
+# Initial x value
+x_0: 0.534522473812
+# Initial y value
+y_0: 0.267261236906
+# Initial z value
+z_0: 0.80178374052
+# DSP usage flag
+no_dsp: False

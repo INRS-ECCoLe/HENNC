@@ -1,29 +1,29 @@
 import argparse
-import csv
+import yaml
 from Analyzer import *
+
+
+
+with open('config.yaml', 'r') as file:
+    config = yaml.safe_load(file)
+    
+
+inp_ns = config['inp_ns']
+hid_ns = config['hid_ns']
+out_ns = config['out_ns']
+sample = config['sample']
+x_0 = config['x_0']
+y_0 = config['y_0']
+z_0 = config['z_0']
+no_dsp = config['no_dsp']
+
 parser = argparse.ArgumentParser()
 
-
-
-
-#with open('config_file.csv') as csv_file:
-
-    #csv_reader = csv.reader(csv_file, delimiter=',')
-
-inp_ns = 3
-hid_ns = 8
-out_ns = 3
-sample = 100
-x_0 = 0.534522473812
-y_0 = 0.267261236906
-z_0 = 0.80178374052
-no_dsp = False
-
-#-db DATABSE -u USERNAME -p PASSWORD -size 20
 parser.add_argument("-g", "--generate", help="Generate HENNC HLS model", action='store_true')
 parser.add_argument("-p", "--performance", help="Generate high-performance HENNC HLS model", action='store_true')
 parser.add_argument("-i", "--interactive", help="Interactive generation of HENNC HLS model", action='store_true')
 parser.add_argument("-a", "--analyze", help="Analyze different solutions", action='store_true')
+parser.add_argument("-f", "--file", help="YAML file with configuration", required=True)
 
 args = parser.parse_args()
 

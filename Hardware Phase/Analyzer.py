@@ -1,7 +1,12 @@
 from HLS_Generator import *
 from Estimator import *
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import numpy as np
+
+# Set the font details
+mpl.rcParams['font.size'] = 13
+mpl.rcParams['font.family'] = 'Times New Roman'
 
 def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, no_dsp, mode: str):
 
@@ -62,11 +67,11 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, no_dsp, mode: str):
 
         plt.plot(estimated_latency, estimated_luts, linestyle = '--', marker='o', lw=2.5, mew=4)
 
-        plt.xlabel("Estimated Iteration Ltanecy (CC)")
-        plt.ylabel("Estimated # of LUTs")
+        plt.xlabel("Estimated Iteration Ltanecy (CC)", weight= 'bold')
+        plt.ylabel("Estimated # of LUTs", weight= 'bold')
         plt.ticklabel_format(axis='both', style='sci', scilimits=(3,3), useMathText=True)
-        plt.rcParams["font.family"] = "serif"
         plt.grid()
+        plt.tight_layout() 
         
         plt.show()
 
