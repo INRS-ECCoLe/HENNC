@@ -87,9 +87,9 @@ def TOP (inp_ns, hid_ns, out_ns, sample, x_0, y_0, z_0, no_dsp, mode: str):
     
     if mode == 'interactive' or mode == 'generate_c' or  mode == 'generate_p':
         
-        create_h_file("Hardware Phase\HENNC.h", inp_ns, hid_ns, out_ns)
-        create_cpp_file("Hardware Phase\HENNC.cpp", sample, factor_1, factor_2, factor_3, factor_4, out_ns, one_mac, no_dsp)
-        create_testBench_file("Hardware Phase\ test_bench.cpp", x_0, y_0, z_0)
+        create_h_file("HENNC.h", inp_ns, hid_ns, out_ns)
+        create_cpp_file("HENNC.cpp", sample, factor_1, factor_2, factor_3, factor_4, out_ns, one_mac, no_dsp)
+        create_testBench_file("test_bench.cpp", x_0, y_0, z_0)
         print("HLS model generated successfully")
 
 

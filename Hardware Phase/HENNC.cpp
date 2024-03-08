@@ -112,7 +112,7 @@ void mlp_core(data_t mlp_in[inp_n], data_t w1_in[inp_n][hid_n], data_t w2_in[hid
 
 	for (int i = 0; i < hid_n; i++)
 	{
-#pragma HLS UNROLL factor= 4
+#pragma HLS UNROLL factor= 8
 
 
 		acc_1 = 0;
@@ -138,7 +138,7 @@ void mlp_core(data_t mlp_in[inp_n], data_t w1_in[inp_n][hid_n], data_t w2_in[hid
 
 		for (int j = 0; j < hid_n; j++)
 		{
-#pragma HLS UNROLL factor= 4
+#pragma HLS UNROLL factor= 8
 
 			acc_2 += hidden_n[j] * w2_in[j][i];
 		}

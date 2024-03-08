@@ -25,7 +25,7 @@ parser.add_argument("-p", "--performance", help="Generate high-performance HENNC
 parser.add_argument("-i", "--interactive", help="Interactive generation of HENNC HLS model", action='store_true')
 parser.add_argument("-a", "--analyze", help="Analyze different solutions", action='store_true')
 
-args = parser.parse_args(["-a"])
+args = parser.parse_args()
 
 print( "generate {}       interactive {}          analyze {} ".format(
         args.generate,
